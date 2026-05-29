@@ -180,6 +180,48 @@ body {
     border-radius: 22px;
 }
 
+/* SEARCH */
+#searchInput{
+width:90%;
+margin:10px auto;
+display:block;
+padding:10px;
+border-radius:10px;
+}
+
+/* TAGS */
+.tags{
+display:flex;
+gap:10px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.tag{
+padding:6px 12px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+}
+
+/* PIN */
+.pinned{
+border:2px solid gold;
+}
+
+/* TAG COLORS */
+.love{border-left:4px solid pink;}
+.sad{border-left:4px solid blue;}
+.study{border-left:4px solid green;}
+.random{border-left:4px solid purple;}
+
+/* MIRROR */
+.mirror{
+font-style:italic;
+opacity:0.8;
+color:#aaa;
+}
+
 /* =========================
    INPUT CARD
 ========================= */
