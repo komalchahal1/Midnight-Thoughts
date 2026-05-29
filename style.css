@@ -928,3 +928,25 @@ textarea::placeholder {
 
   transform: scale(1.05);
 }
+
+#changePasswordBtn{
+  margin-top: 12px;
+
+  background: transparent;
+
+  border: none;
+
+  color: #93c5fd;
+
+  font-size: 0.85rem;
+
+  cursor: pointer;
+
+  text-decoration: underline;
+
+  opacity: 0.8;
+}
+
+#changePasswordBtn:hover{
+  opacity: 1;
+}
