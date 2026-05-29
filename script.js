@@ -384,62 +384,64 @@ function showFeedback(msg){
 
 }
 
-// LOCK SCREEN
-
 const unlockBtn =
-  document.getElementById("unlockBtn");
+document.getElementById("unlockBtn");
 
 const passwordInput =
-  document.getElementById("passwordInput");
+document.getElementById("passwordInput");
 
 const lockScreen =
-  document.getElementById("lockScreen");
+document.getElementById("lockScreen");
 
 const lockMessage =
-  document.getElementById("lockMessage");
+document.getElementById("lockMessage");
 
 const PASSWORD = "moonlight";
 
-unlockBtn.addEventListener("click",()=>{
+unlockBtn.addEventListener("click", unlockJournal);
 
-  if(passwordInput.value === PASSWORD){
+passwordInput.addEventListener("keypress", (e) => {
 
-    lockScreen.style.display = "none";
-
-  }else{
-
-    lockMessage.innerText =
-      "Wrong password 🌙";
-
+  if(e.key === "Enter"){
+    unlockJournal();
   }
 
 });
 
-// QUOTES
+function unlockJournal(){
 
-const quotes = [
+  const enteredPassword =
+  passwordInput.value.trim();
 
-  "Some thoughts only visit after midnight.",
+  if(enteredPassword === PASSWORD){
 
-  "The moon understands silence.",
+    lockScreen.style.opacity = "0";
 
-  "Even stars feel lonely sometimes.",
+    setTimeout(() => {
 
-  "Not every thought needs an answer."
+      lockScreen.style.display = "none";
 
-];
+    }, 500);
 
-let q = 0;
-
-setInterval(()=>{
-
-  q++;
-
-  if(q >= quotes.length){
-    q = 0;
   }
 
-  document.getElementById("quoteText")
-  .innerText = quotes[q];
+  else{
 
-},4000);
+    lockMessage.innerText =
+    "Wrong password 🌙";
+
+    passwordInput.style.border =
+    "1px solid crimson";
+
+    setTimeout(() => {
+
+      lockMessage.innerText = "";
+
+      passwordInput.style.border =
+      "none";
+
+    }, 2000);
+
+  }
+
+}
