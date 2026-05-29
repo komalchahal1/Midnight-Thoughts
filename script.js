@@ -359,6 +359,11 @@ function saveToLocalStorage() {
 
 }
 
+/* TAGS */
+document.querySelectorAll(".tag").forEach(btn=>{
+btn.onclick = ()=> selectedTag = btn.dataset.tag;
+});
+
 // =========================
 // FEEDBACK MESSAGE
 // =========================
@@ -410,6 +415,130 @@ musicToggle.addEventListener("click", () => {
   }
 
 });
+
+/* MOOD */
+document.querySelectorAll(".mood-selector button").forEach(btn=>{
+btn.onclick = ()=> selectedMood = btn.dataset.mood;
+});
+
+/* DETECT MOOD */
+function detectMood(text){
+
+let t = text.toLowerCase();
+
+if(t.includes("cry")||t.includes("sad")) return "sad";
+
+if(t.includes("love")) return "love";
+
+if(t.includes("exam")||t.includes("study")) return "study";
+
+return "normal";
+}
+
+/* PIN */
+function togglePin(i){
+thoughts[i].pinned = !thoughts[i].pinned;
+save(); render();
+}
+
+/* SEARCH */
+document.getElementById("searchInput").oninput = (e)=>{
+render(e.target.value);
+};
+
+/* EXPORT */
+document.getElementById("exportBtn").onclick = ()=>{
+
+let data = JSON.stringify(thoughts);
+
+let blob = new Blob([data],{type:"text/plain"});
+
+let a = document.createElement("a");
+
+a.href = URL.createObjectURL(blob);
+
+a.download = "midnight_thoughts.txt";
+
+a.click();
+};
+
+/* MIRROR THOUGHTS */
+document.getElementById("mirrorBtn").onclick = ()=>{
+
+let mirrorText = thoughts.map(t=>
+"You are overthinking again: " + t.text
+).join("\n");
+
+alert(mirrorText);
+};
+
+/* VOICE RECORD */
+let recorder;
+let chunks = [];
+
+document.getElementById("recordBtn").onclick = async ()=>{
+
+let stream = await navigator.mediaDevices.getUserMedia({audio:true});
+
+recorder = new MediaRecorder(stream);
+
+recorder.start();
+
+recorder.ondataavailable = e=>chunks.push(e.data);
+
+recorder.onstop = ()=>{
+
+let blob = new Blob(chunks,{type:"audio/mp3"});
+
+chunks=[];
+
+let url = URL.createObjectURL(blob);
+
+let audio = new Audio(url);
+
+audio.play();
+
+};
+
+setTimeout(()=>recorder.stop(),5000);
+};
+
+/* RENDER */
+function render(search=""){
+
+let container = document.getElementById("thoughtsContainer");
+
+container.innerHTML="";
+
+thoughts
+.sort((a,b)=>b.pinned-a.pinned)
+.filter(t=>t.text.includes(search))
+.forEach((t,i)=>{
+
+let div=document.createElement("div");
+
+div.className=`thought glass ${t.tag} ${t.mood}`;
+
+if(t.pinned) div.classList.add("pinned");
+
+div.innerHTML=`
+<b>${t.text}</b><br>
+<small>${t.time}</small><br>
+
+<button onclick="togglePin(${i})">📌 Pin</button>
+`;
+
+container.appendChild(div);
+
+});
+
+}
+
+function save(){
+localStorage.setItem("t",JSON.stringify(thoughts));
+}
+
+render();
 
 // =========================
 // SERVICE WORKER
