@@ -274,68 +274,95 @@ displayThoughts();
 // LOCK SYSTEM
 // =========================
 
-const unlockBtn =
-document.getElementById("unlockBtn");
+window.addEventListener("DOMContentLoaded", () => {
 
-const passwordInput =
-document.getElementById("passwordInput");
+  const unlockBtn =
+  document.getElementById("unlockBtn");
 
-const lockScreen =
-document.getElementById("lockScreen");
+  const passwordInput =
+  document.getElementById("passwordInput");
 
-const lockMessage =
-document.getElementById("lockMessage");
+  const lockScreen =
+  document.getElementById("lockScreen");
 
-// CHECK IF PASSWORD EXISTS
+  const lockMessage =
+  document.getElementById("lockMessage");
 
-let savedPassword =
-localStorage.getItem("midnightPassword");
+  const resetBtn =
+  document.getElementById("resetPasswordBtn");
 
-// FIRST TIME USER
+  // GET SAVED PASSWORD
 
-if(!savedPassword){
+  let savedPassword =
+  localStorage.getItem("midnightPassword");
 
-  lockMessage.innerText =
-  "Create your secret password 🌙";
-
-  unlockBtn.innerText =
-  "Create Password";
-
-}
-
-// MAIN FUNCTION
-
-function unlockJournal(){
-
-  const enteredPassword =
-  passwordInput.value.trim();
-
-  // EMPTY INPUT
-
-  if(!enteredPassword){
-
-    lockMessage.innerText =
-    "Enter password first";
-
-    return;
-
-  }
-
-  // FIRST TIME → CREATE PASSWORD
+  // FIRST TIME USER
 
   if(!savedPassword){
 
-    localStorage.setItem(
-      "midnightPassword",
-      enteredPassword
-    );
-
-    savedPassword = enteredPassword;
-
     lockMessage.innerText =
-    "Password created ✨";
+    "Create your secret password 🌙";
 
-    setTimeout(() => {
+    unlockBtn.innerText =
+    "Create Password";
+
+  }
+
+  // MAIN FUNCTION
+
+  function unlockJournal(){
+
+    const enteredPassword =
+    passwordInput.value.trim();
+
+    // EMPTY INPUT
+
+    if(!enteredPassword){
+
+      lockMessage.innerText =
+      "Enter password first";
+
+      return;
+
+    }
+
+    // CREATE PASSWORD
+
+    if(!savedPassword){
+
+      localStorage.setItem(
+        "midnightPassword",
+        enteredPassword
+      );
+
+      savedPassword = enteredPassword;
+
+      lockMessage.innerText =
+      "Password Created ✨";
+
+      setTimeout(() => {
+
+        lockScreen.style.opacity = "0";
+
+        setTimeout(() => {
+
+          lockScreen.style.display =
+          "none";
+
+        },500);
+
+      },800);
+
+      return;
+
+    }
+
+    // LOGIN
+
+    if(enteredPassword === savedPassword){
+
+      lockMessage.innerText =
+      "Unlocked 🌙";
 
       lockScreen.style.opacity = "0";
 
@@ -346,84 +373,66 @@ function unlockJournal(){
 
       },500);
 
-    },800);
+    }
 
-    return;
+    else{
 
-  }
-
-  // LOGIN
-
-  if(enteredPassword === savedPassword){
-
-    lockScreen.style.opacity = "0";
-
-    setTimeout(() => {
-
-      lockScreen.style.display =
-      "none";
-
-    },500);
-
-  }
-
-  else{
-
-    lockMessage.innerText =
-    "Wrong password 🌙";
-
-    passwordInput.style.border =
-    "1px solid crimson";
-
-    setTimeout(() => {
+      lockMessage.innerText =
+      "Wrong password 🌙";
 
       passwordInput.style.border =
-      "none";
+      "1px solid crimson";
 
-    },2000);
+      setTimeout(() => {
 
-  }
+        passwordInput.style.border =
+        "1px solid rgba(255,255,255,0.1)";
 
-}
-
-// BUTTON
-
-unlockBtn.addEventListener(
-  "click",
-  unlockJournal
-);
-
-// ENTER KEY
-
-passwordInput.addEventListener(
-  "keydown",
-  (e)=>{
-
-    if(e.key === "Enter"){
-
-      unlockJournal();
+      },2000);
 
     }
 
-    const resetBtn =
-document.getElementById(
-  "resetPasswordBtn"
-);
+  }
 
-resetBtn.addEventListener(
-  "click",
-  ()=>{
+  // BUTTON CLICK
 
-    localStorage.removeItem(
-      "midnightPassword"
+  unlockBtn.addEventListener(
+    "click",
+    unlockJournal
+  );
+
+  // ENTER KEY
+
+  passwordInput.addEventListener(
+    "keydown",
+    (e) => {
+
+      if(e.key === "Enter"){
+
+        unlockJournal();
+
+      }
+
+    }
+  );
+
+  // RESET PASSWORD
+
+  if(resetBtn){
+
+    resetBtn.addEventListener(
+      "click",
+      () => {
+
+        localStorage.removeItem(
+          "midnightPassword"
+        );
+
+        location.reload();
+
+      }
     );
 
-    location.reload();
-
   }
-);
 
-  }
-);
-
-                    
+});
