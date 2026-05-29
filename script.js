@@ -164,6 +164,47 @@ unlockBtn.addEventListener("click", () => {
 });
 
 // =========================
+// CHANGE PASSWORD
+// =========================
+
+const changePasswordBtn =
+  document.getElementById("changePasswordBtn");
+
+changePasswordBtn.addEventListener("click", () => {
+
+  const oldPassword =
+    prompt("Enter old password:");
+
+  const savedPassword =
+    localStorage.getItem("journalPassword");
+
+  if(oldPassword === savedPassword){
+
+    const newPassword =
+      prompt("Enter new password:");
+
+    if(newPassword && newPassword.trim() !== ""){
+
+      localStorage.setItem(
+        "journalPassword",
+        newPassword
+      );
+
+      alert("Password changed successfully ✨");
+
+    } else {
+
+      alert("Invalid new password");
+    }
+
+  } else {
+
+    alert("Wrong password ❌");
+  }
+
+});
+
+// =========================
 // LOAD THOUGHTS
 // =========================
 
