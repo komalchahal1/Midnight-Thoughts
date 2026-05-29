@@ -405,6 +405,24 @@ passwordInput.addEventListener(
 
     }
 
+    const resetBtn =
+document.getElementById(
+  "resetPasswordBtn"
+);
+
+resetBtn.addEventListener(
+  "click",
+  ()=>{
+
+    localStorage.removeItem(
+      "midnightPassword"
+    );
+
+    location.reload();
+
+  }
+);
+
   }
 );
 
