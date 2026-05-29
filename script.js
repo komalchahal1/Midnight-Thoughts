@@ -1,140 +1,100 @@
-// ELEMENTS
+window.addEventListener("DOMContentLoaded", () => {
+// =========================
+// SELECT ELEMENTS
+// =========================
 
 const thoughtInput = document.getElementById("thoughtInput");
-
 const saveBtn = document.getElementById("saveBtn");
+const thoughtsContainer = document.getElementById("thoughtsContainer");
+const emptyState = document.getElementById("emptyState");
+const feedback = document.getElementById("feedback");
 
-const thoughtsContainer =
-  document.getElementById("thoughtsContainer");
+const searchInput = document.getElementById("searchInput");
 
-const emptyState =
-  document.getElementById("emptyState");
-
-const feedback =
-  document.getElementById("feedback");
-
-const searchInput =
-  document.getElementById("searchInput");
-
+// =========================
 // STATE
+// =========================
 
-let thoughts =
-  JSON.parse(
-    localStorage.getItem("midnightThoughts")
-  ) || [];
+let thoughts = JSON.parse(localStorage.getItem("midnightThoughts")) || [];
 
 let selectedTag = "random";
-
 let selectedMood = "normal";
 
-// DISPLAY
+// =========================
+// INIT
+// =========================
 
 displayThoughts();
 
-// SAVE
+// =========================
+// SAVE THOUGHT
+// =========================
 
 saveBtn.addEventListener("click", () => {
 
   const text = thoughtInput.value.trim();
 
-  if(!text){
-
+  if (!text) {
     showFeedback("Write something first...");
     return;
-
   }
 
   const thought = {
-
     text,
-
-    time:new Date().toLocaleString(),
-
-    tag:selectedTag,
-
-    mood:selectedMood,
-
-    pinned:false
-
+    time: new Date().toLocaleString(),
+    tag: selectedTag,
+    mood: selectedMood,
+    pinned: false
   };
 
   thoughts.unshift(thought);
 
   saveToLocalStorage();
-
   thoughtInput.value = "";
 
   displayThoughts();
-
   showFeedback("Thought saved ✨");
 
 });
 
+// =========================
 // DISPLAY THOUGHTS
+// =========================
 
-function displayThoughts(filterText = ""){
+function displayThoughts(filterText = "") {
 
   thoughtsContainer.innerHTML = "";
 
   let filtered = thoughts.filter(t =>
-    t.text.toLowerCase()
-    .includes(filterText.toLowerCase())
+    t.text.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  if(filtered.length === 0){
-
+  if (filtered.length === 0) {
     emptyState.style.display = "block";
     return;
-
-  }else{
-
+  } else {
     emptyState.style.display = "none";
-
   }
 
-  filtered.forEach((thought)=>{
-
-    const realIndex = thoughts.indexOf(thought);
+  filtered.forEach((thought, index) => {
 
     const card = document.createElement("div");
 
-    card.classList.add(
-      "thought-card",
-      "glass",
-      thought.tag,
-      thought.mood
-    );
+    card.classList.add("thought-card", "glass", thought.tag, thought.mood);
+
+    if (thought.pinned) card.classList.add("pinned");
 
     card.innerHTML = `
+      <p>${thought.text}</p>
+      <small>${thought.time}</small>
 
-      <p class="thought-text">
-        ${thought.text}
-      </p>
+      <div class="card-buttons">
 
-      <div class="card-footer">
-
-        <small class="date">
-          ${thought.time}
-        </small>
-
-        <div class="card-buttons">
-
-          <button onclick="togglePin(${realIndex})">
-            📌
-          </button>
-
-          <button onclick="editThought(${realIndex})">
-            ✏️
-          </button>
-
-          <button onclick="deleteThought(${realIndex})">
-            🗑️
-          </button>
-
-        </div>
+        <button onclick="togglePin(${index})">📌</button>
+        <button onclick="editThought(${index})">✏️</button>
+        <button onclick="deleteThought(${index})">🗑️</button>
 
       </div>
-
     `;
 
     thoughtsContainer.appendChild(card);
@@ -143,246 +103,176 @@ function displayThoughts(filterText = ""){
 
 }
 
+// =========================
 // DELETE
+// =========================
 
-function deleteThought(index){
-
-  thoughts.splice(index,1);
-
+function deleteThought(index) {
+  thoughts.splice(index, 1);
   saveToLocalStorage();
-
   displayThoughts();
-
   showFeedback("Deleted 🗑️");
-
 }
 
+// =========================
 // EDIT
+// =========================
 
-function editThought(index){
+function editThought(index) {
 
-  const updated = prompt(
-    "Edit your thought:",
-    thoughts[index].text
-  );
+  const updated = prompt("Edit your thought:", thoughts[index].text);
 
-  if(updated && updated.trim()){
-
+  if (updated && updated.trim()) {
     thoughts[index].text = updated.trim();
-
     saveToLocalStorage();
-
     displayThoughts();
-
     showFeedback("Updated ✨");
-
   }
 
 }
 
+// =========================
 // PIN
+// =========================
 
-function togglePin(index){
-
-  thoughts[index].pinned =
-    !thoughts[index].pinned;
-
-  thoughts.sort((a,b)=>b.pinned-a.pinned);
-
+function togglePin(index) {
+  thoughts[index].pinned = !thoughts[index].pinned;
   saveToLocalStorage();
-
   displayThoughts();
-
 }
 
+// =========================
 // SEARCH
+// =========================
 
-searchInput.addEventListener("input",(e)=>{
-
+searchInput.addEventListener("input", (e) => {
   displayThoughts(e.target.value);
-
 });
 
+// =========================
 // TAGS
+// =========================
 
-document.querySelectorAll(".tag")
-.forEach(btn=>{
-
-  btn.addEventListener("click",()=>{
-
+document.querySelectorAll(".tag").forEach(btn => {
+  btn.addEventListener("click", () => {
     selectedTag = btn.dataset.tag;
-
-    showFeedback(
-      "Tag selected: " + selectedTag
-    );
-
+    showFeedback("Tag: " + selectedTag);
   });
-
 });
 
-// MOODS
+// =========================
+// MOOD
+// =========================
 
-document.querySelectorAll(".mood-btn")
-.forEach(btn=>{
-
-  btn.addEventListener("click",()=>{
+document.querySelectorAll(".mood-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
 
     document.querySelectorAll(".mood-btn")
-    .forEach(b=>b.classList.remove("active"));
+      .forEach(b => b.classList.remove("active"));
 
     btn.classList.add("active");
 
     selectedMood = btn.dataset.mood;
 
   });
-
 });
 
+// =========================
 // EXPORT
+// =========================
 
-document.getElementById("exportBtn")
-.addEventListener("click",()=>{
+document.getElementById("exportBtn").addEventListener("click", () => {
 
-  const data =
-    JSON.stringify(thoughts,null,2);
+  const data = JSON.stringify(thoughts, null, 2);
 
-  const blob = new Blob(
-    [data],
-    {type:"text/plain"}
-  );
+  const blob = new Blob([data], { type: "text/plain" });
 
-  const a =
-    document.createElement("a");
+  const a = document.createElement("a");
 
-  a.href =
-    URL.createObjectURL(blob);
-
-  a.download =
-    "midnight-thoughts.json";
+  a.href = URL.createObjectURL(blob);
+  a.download = "midnight-thoughts.json";
 
   a.click();
 
 });
 
-// MIRROR
+// =========================
+// MIRROR THOUGHTS
+// =========================
 
-document.getElementById("mirrorBtn")
-.addEventListener("click",()=>{
+document.getElementById("mirrorBtn").addEventListener("click", () => {
 
   let msg = thoughts
-  .map(t=>
-    `You are overthinking again...\n→ ${t.text}`
-  )
-  .join("\n\n");
+    .map(t => `You are overthinking again...\n→ ${t.text}`)
+    .join("\n\n");
 
   alert(msg || "No thoughts yet.");
 
 });
 
-// RECORD
+// =========================
+// VOICE RECORD (5 sec)
+// =========================
 
-document.getElementById("recordBtn")
-.addEventListener("click",async()=>{
+document.getElementById("recordBtn").addEventListener("click", async () => {
 
-  const stream =
-    await navigator.mediaDevices
-    .getUserMedia({audio:true});
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-  const recorder =
-    new MediaRecorder(stream);
+  const recorder = new MediaRecorder(stream);
 
   let chunks = [];
 
   recorder.start();
 
-  showFeedback("Recording... 🎙");
+  recorder.ondataavailable = e => chunks.push(e.data);
 
-  recorder.ondataavailable =
-    e => chunks.push(e.data);
+  recorder.onstop = () => {
 
-  recorder.onstop = ()=>{
+    const blob = new Blob(chunks, { type: "audio/webm" });
 
-    const blob =
-      new Blob(chunks,{
-        type:"audio/webm"
-      });
+    const url = URL.createObjectURL(blob);
 
-    const url =
-      URL.createObjectURL(blob);
-
-    const audio =
-      new Audio(url);
+    const audio = new Audio(url);
 
     audio.play();
 
-    showFeedback("Voice note played 🎧");
-
   };
 
-  setTimeout(()=>{
-    recorder.stop();
-  },5000);
+  setTimeout(() => recorder.stop(), 5000);
 
 });
 
-// MUSIC
-
-const music =
-  document.getElementById("bgMusic");
-
-const musicToggle =
-  document.getElementById("musicToggle");
-
-let isPlaying = false;
-
-musicToggle.addEventListener("click",()=>{
-
-  if(!isPlaying){
-
-    music.play();
-
-    musicToggle.innerText =
-      "Pause Music";
-
-    isPlaying = true;
-
-  }else{
-
-    music.pause();
-
-    musicToggle.innerText =
-      "Play Music";
-
-    isPlaying = false;
-
-  }
-
-});
-
+// =========================
 // LOCAL STORAGE
+// =========================
 
-function saveToLocalStorage(){
-
-  localStorage.setItem(
-    "midnightThoughts",
-    JSON.stringify(thoughts)
-  );
-
+function saveToLocalStorage() {
+  localStorage.setItem("midnightThoughts", JSON.stringify(thoughts));
 }
 
+// =========================
 // FEEDBACK
+// =========================
 
-function showFeedback(msg){
+function showFeedback(msg) {
 
   feedback.innerText = msg;
 
-  setTimeout(()=>{
-
+  setTimeout(() => {
     feedback.innerText = "";
-
-  },2000);
+  }, 2000);
 
 }
+
+// =========================
+// INITIAL RENDER
+// =========================
+
+displayThoughts();
+
+// =========================
+// LOCK SYSTEM
+// =========================
 
 const unlockBtn =
 document.getElementById("unlockBtn");
@@ -396,32 +286,84 @@ document.getElementById("lockScreen");
 const lockMessage =
 document.getElementById("lockMessage");
 
-const PASSWORD = "moonlight";
+// CHECK IF PASSWORD EXISTS
 
-unlockBtn.addEventListener("click", unlockJournal);
+let savedPassword =
+localStorage.getItem("midnightPassword");
 
-passwordInput.addEventListener("keypress", (e) => {
+// FIRST TIME USER
 
-  if(e.key === "Enter"){
-    unlockJournal();
-  }
+if(!savedPassword){
 
-});
+  lockMessage.innerText =
+  "Create your secret password 🌙";
+
+  unlockBtn.innerText =
+  "Create Password";
+
+}
+
+// MAIN FUNCTION
 
 function unlockJournal(){
 
   const enteredPassword =
   passwordInput.value.trim();
 
-  if(enteredPassword === PASSWORD){
+  // EMPTY INPUT
+
+  if(!enteredPassword){
+
+    lockMessage.innerText =
+    "Enter password first";
+
+    return;
+
+  }
+
+  // FIRST TIME → CREATE PASSWORD
+
+  if(!savedPassword){
+
+    localStorage.setItem(
+      "midnightPassword",
+      enteredPassword
+    );
+
+    savedPassword = enteredPassword;
+
+    lockMessage.innerText =
+    "Password created ✨";
+
+    setTimeout(() => {
+
+      lockScreen.style.opacity = "0";
+
+      setTimeout(() => {
+
+        lockScreen.style.display =
+        "none";
+
+      },500);
+
+    },800);
+
+    return;
+
+  }
+
+  // LOGIN
+
+  if(enteredPassword === savedPassword){
 
     lockScreen.style.opacity = "0";
 
     setTimeout(() => {
 
-      lockScreen.style.display = "none";
+      lockScreen.style.display =
+      "none";
 
-    }, 500);
+    },500);
 
   }
 
@@ -435,13 +377,35 @@ function unlockJournal(){
 
     setTimeout(() => {
 
-      lockMessage.innerText = "";
-
       passwordInput.style.border =
       "none";
 
-    }, 2000);
+    },2000);
 
   }
 
 }
+
+// BUTTON
+
+unlockBtn.addEventListener(
+  "click",
+  unlockJournal
+);
+
+// ENTER KEY
+
+passwordInput.addEventListener(
+  "keydown",
+  (e)=>{
+
+    if(e.key === "Enter"){
+
+      unlockJournal();
+
+    }
+
+  }
+);
+
+                    
