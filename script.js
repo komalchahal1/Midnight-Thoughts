@@ -1,4 +1,3 @@
-window.addEventListener("DOMContentLoaded", () => {
 // =========================
 // SELECT ELEMENTS
 // =========================
@@ -9,21 +8,169 @@ const thoughtsContainer = document.getElementById("thoughtsContainer");
 const emptyState = document.getElementById("emptyState");
 const feedback = document.getElementById("feedback");
 
-const searchInput = document.getElementById("searchInput");
-
 // =========================
-// STATE
+// QUOTES
 // =========================
 
-let thoughts = JSON.parse(localStorage.getItem("midnightThoughts")) || [];
+const quotes = [
 
-let selectedTag = "random";
+  "Some thoughts only visit after midnight.",
+
+  "The moon understands what the sun never could.",
+
+  "Not every storm comes to destroy you.",
+
+  "Your silent thoughts still matter.",
+
+  "Even lonely nights create beautiful souls.",
+
+  "Stars shine brightest in dark skies."
+
+];
+
+const quoteText =
+  document.getElementById("quoteText");
+
+// Random Quote
+
+const randomQuote =
+  quotes[Math.floor(Math.random() * quotes.length)];
+
+quoteText.innerHTML =
+  `"${randomQuote}"`;
+
+  // =========================
+// MOOD SELECTOR
+// =========================
+
+const moodButtons =
+  document.querySelectorAll(".mood-btn");
+
 let selectedMood = "normal";
 
+// Mood Click
+
+moodButtons.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    // Remove active class
+    moodButtons.forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+    // Add active
+    button.classList.add("active");
+
+    // Save mood
+    selectedMood =
+      button.dataset.mood;
+
+  });
+
+});
+
 // =========================
-// INIT
+// PASSWORD SYSTEM
 // =========================
 
+const lockScreen =
+  document.getElementById("lockScreen");
+
+const passwordInput =
+  document.getElementById("passwordInput");
+
+const unlockBtn =
+  document.getElementById("unlockBtn");
+
+const lockMessage =
+  document.getElementById("lockMessage");
+
+// Get saved password
+let savedPassword =
+  localStorage.getItem("journalPassword");
+
+// =========================
+// FIRST TIME SETUP
+// =========================
+
+if(!savedPassword){
+
+  lockMessage.innerHTML =
+    "Create your secret password";
+
+  unlockBtn.innerHTML =
+    "Set Password";
+
+}
+
+// =========================
+// BUTTON CLICK
+// =========================
+
+unlockBtn.addEventListener("click", () => {
+
+  const enteredPassword =
+    passwordInput.value.trim();
+
+  // Prevent empty password
+  if(enteredPassword === ""){
+
+    lockMessage.innerHTML =
+      "Password cannot be empty";
+
+    return;
+  }
+
+  // =========================
+  // FIRST TIME CREATE PASSWORD
+  // =========================
+
+  if(!savedPassword){
+
+    localStorage.setItem(
+      "journalPassword",
+      enteredPassword
+    );
+
+    savedPassword = enteredPassword;
+
+    lockMessage.innerHTML =
+      "Password created successfully ✨";
+
+    setTimeout(() => {
+
+      lockScreen.style.display = "none";
+
+    }, 800);
+
+    return;
+  }
+
+  // =========================
+  // CHECK PASSWORD
+  // =========================
+
+  if(enteredPassword === savedPassword){
+
+    lockScreen.style.display = "none";
+
+  }else{
+
+    lockMessage.innerHTML =
+      "Wrong password...";
+  }
+
+});
+
+// =========================
+// LOAD THOUGHTS
+// =========================
+
+let thoughts =
+  JSON.parse(localStorage.getItem("midnightThoughts")) || [];
+
+// Display thoughts on page load
 displayThoughts();
 
 // =========================
@@ -32,27 +179,34 @@ displayThoughts();
 
 saveBtn.addEventListener("click", () => {
 
-  const text = thoughtInput.value.trim();
+  const thoughtText = thoughtInput.value.trim();
 
-  if (!text) {
+  // Prevent empty input
+  if (thoughtText === "") {
     showFeedback("Write something first...");
     return;
   }
 
-  const thought = {
-    text,
-    time: new Date().toLocaleString(),
-    tag: selectedTag,
-    mood: selectedMood,
-    pinned: false
-  };
+  // Thought Object
+ const thought = {
+  text: thoughtText,
+  time: new Date().toLocaleString(),
+  mood: selectedMood
+};
 
+  // Add new thought at top
   thoughts.unshift(thought);
 
+  // Save to localStorage
   saveToLocalStorage();
+
+  // Clear textarea
   thoughtInput.value = "";
 
+  // Refresh UI
   displayThoughts();
+
+  // Feedback
   showFeedback("Thought saved ✨");
 
 });
@@ -61,38 +215,54 @@ saveBtn.addEventListener("click", () => {
 // DISPLAY THOUGHTS
 // =========================
 
-function displayThoughts(filterText = "") {
+function displayThoughts() {
 
   thoughtsContainer.innerHTML = "";
 
-  let filtered = thoughts.filter(t =>
-    t.text.toLowerCase().includes(filterText.toLowerCase())
-  );
-
-  if (filtered.length === 0) {
+  // Show empty state
+  if (thoughts.length === 0) {
     emptyState.style.display = "block";
     return;
-  } else {
-    emptyState.style.display = "none";
   }
 
-  filtered.forEach((thought, index) => {
+  emptyState.style.display = "none";
+
+  // Create cards
+  thoughts.forEach((thought, index) => {
 
     const card = document.createElement("div");
 
-    card.classList.add("thought-card", "glass", thought.tag, thought.mood);
-
-    if (thought.pinned) card.classList.add("pinned");
+    card.classList.add("thought-card", "glass");
+    card.classList.add(thought.mood);
 
     card.innerHTML = `
-      <p>${thought.text}</p>
-      <small>${thought.time}</small>
+      <p class="thought-text">
+        ${thought.text}
+      </p>
 
-      <div class="card-buttons">
+      <div class="card-footer">
 
-        <button onclick="togglePin(${index})">📌</button>
-        <button onclick="editThought(${index})">✏️</button>
-        <button onclick="deleteThought(${index})">🗑️</button>
+        <span class="date">
+          ${thought.time}
+        </span>
+
+        <div class="card-buttons">
+
+  <button
+    class="edit-btn"
+    data-index="${index}"
+  >
+    Edit
+  </button>
+
+  <button
+    class="delete-btn"
+    data-index="${index}"
+  >
+    Delete
+  </button>
+
+</div>
 
       </div>
     `;
@@ -104,335 +274,139 @@ function displayThoughts(filterText = "") {
 }
 
 // =========================
-// DELETE
+// DELETE THOUGHT
 // =========================
 
-function deleteThought(index) {
-  thoughts.splice(index, 1);
-  saveToLocalStorage();
-  displayThoughts();
-  showFeedback("Deleted 🗑️");
-}
+thoughtsContainer.addEventListener("click", (e) => {
 
-// =========================
-// EDIT
-// =========================
+  // Check if delete button clicked
+  if (e.target.classList.contains("delete-btn")) {
 
-function editThought(index) {
+    const index = e.target.dataset.index;
 
-  const updated = prompt("Edit your thought:", thoughts[index].text);
+    // Remove thought
+    thoughts.splice(index, 1);
 
-  if (updated && updated.trim()) {
-    thoughts[index].text = updated.trim();
+    // Save updated array
     saveToLocalStorage();
+
+    // Refresh UI
     displayThoughts();
-    showFeedback("Updated ✨");
+
+    // Feedback
+    showFeedback("Thought deleted 🗑️");
   }
 
-}
-
-// =========================
-// PIN
-// =========================
-
-function togglePin(index) {
-  thoughts[index].pinned = !thoughts[index].pinned;
-  saveToLocalStorage();
-  displayThoughts();
-}
-
-// =========================
-// SEARCH
-// =========================
-
-searchInput.addEventListener("input", (e) => {
-  displayThoughts(e.target.value);
 });
 
 // =========================
-// TAGS
+// EDIT THOUGHT
 // =========================
 
-document.querySelectorAll(".tag").forEach(btn => {
-  btn.addEventListener("click", () => {
-    selectedTag = btn.dataset.tag;
-    showFeedback("Tag: " + selectedTag);
-  });
-});
+thoughtsContainer.addEventListener("click", (e) => {
 
-// =========================
-// MOOD
-// =========================
+  // Check edit button
+  if(e.target.classList.contains("edit-btn")){
 
-document.querySelectorAll(".mood-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
+    const index =
+      e.target.dataset.index;
 
-    document.querySelectorAll(".mood-btn")
-      .forEach(b => b.classList.remove("active"));
+    // Get current text
+    const currentText =
+      thoughts[index].text;
 
-    btn.classList.add("active");
+    // Prompt edit
+    const editedText =
+      prompt(
+        "Edit your thought:",
+        currentText
+      );
 
-    selectedMood = btn.dataset.mood;
+    // Prevent empty edit
+    if(
+      editedText !== null &&
+      editedText.trim() !== ""
+    ){
 
-  });
-});
+      thoughts[index].text =
+        editedText.trim();
 
-// =========================
-// EXPORT
-// =========================
+      // Save updated
+      saveToLocalStorage();
 
-document.getElementById("exportBtn").addEventListener("click", () => {
+      // Refresh UI
+      displayThoughts();
 
-  const data = JSON.stringify(thoughts, null, 2);
+      // Feedback
+      showFeedback("Thought updated ✨");
 
-  const blob = new Blob([data], { type: "text/plain" });
+    }
 
-  const a = document.createElement("a");
-
-  a.href = URL.createObjectURL(blob);
-  a.download = "midnight-thoughts.json";
-
-  a.click();
+  }
 
 });
 
 // =========================
-// MIRROR THOUGHTS
-// =========================
-
-document.getElementById("mirrorBtn").addEventListener("click", () => {
-
-  let msg = thoughts
-    .map(t => `You are overthinking again...\n→ ${t.text}`)
-    .join("\n\n");
-
-  alert(msg || "No thoughts yet.");
-
-});
-
-// =========================
-// VOICE RECORD (5 sec)
-// =========================
-
-document.getElementById("recordBtn").addEventListener("click", async () => {
-
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-  const recorder = new MediaRecorder(stream);
-
-  let chunks = [];
-
-  recorder.start();
-
-  recorder.ondataavailable = e => chunks.push(e.data);
-
-  recorder.onstop = () => {
-
-    const blob = new Blob(chunks, { type: "audio/webm" });
-
-    const url = URL.createObjectURL(blob);
-
-    const audio = new Audio(url);
-
-    audio.play();
-
-  };
-
-  setTimeout(() => recorder.stop(), 5000);
-
-});
-
-// =========================
-// LOCAL STORAGE
+// SAVE TO LOCAL STORAGE
 // =========================
 
 function saveToLocalStorage() {
-  localStorage.setItem("midnightThoughts", JSON.stringify(thoughts));
+
+  localStorage.setItem(
+    "midnightThoughts",
+    JSON.stringify(thoughts)
+  );
+
 }
 
 // =========================
-// FEEDBACK
+// FEEDBACK MESSAGE
 // =========================
 
-function showFeedback(msg) {
+function showFeedback(message) {
 
-  feedback.innerText = msg;
+  feedback.textContent = message;
 
   setTimeout(() => {
-    feedback.innerText = "";
+    feedback.textContent = "";
   }, 2000);
 
 }
 
 // =========================
-// INITIAL RENDER
+// BACKGROUND MUSIC
 // =========================
 
-displayThoughts();
+const bgMusic =
+  document.getElementById("bgMusic");
 
-// =========================
-// LOCK SYSTEM
-// =========================
+const musicToggle =
+  document.getElementById("musicToggle");
 
-window.addEventListener("DOMContentLoaded", () => {
+let isPlaying = false;
 
-  const unlockBtn =
-  document.getElementById("unlockBtn");
+// Volume
+bgMusic.volume = 0.4;
 
-  const passwordInput =
-  document.getElementById("passwordInput");
+// Toggle Music
 
-  const lockScreen =
-  document.getElementById("lockScreen");
+musicToggle.addEventListener("click", () => {
 
-  const lockMessage =
-  document.getElementById("lockMessage");
+  if(!isPlaying){
 
-  const resetBtn =
-  document.getElementById("resetPasswordBtn");
+    bgMusic.play();
 
-  // GET SAVED PASSWORD
+    musicToggle.innerHTML = "Pause Music";
 
-  let savedPassword =
-  localStorage.getItem("midnightPassword");
+    isPlaying = true;
 
-  // FIRST TIME USER
+  }else{
 
-  if(!savedPassword){
+    bgMusic.pause();
 
-    lockMessage.innerText =
-    "Create your secret password 🌙";
+    musicToggle.innerHTML = "Play Music";
 
-    unlockBtn.innerText =
-    "Create Password";
-
-  }
-
-  // MAIN FUNCTION
-
-  function unlockJournal(){
-
-    const enteredPassword =
-    passwordInput.value.trim();
-
-    // EMPTY INPUT
-
-    if(!enteredPassword){
-
-      lockMessage.innerText =
-      "Enter password first";
-
-      return;
-
-    }
-
-    // CREATE PASSWORD
-
-    if(!savedPassword){
-
-      localStorage.setItem(
-        "midnightPassword",
-        enteredPassword
-      );
-
-      savedPassword = enteredPassword;
-
-      lockMessage.innerText =
-      "Password Created ✨";
-
-      setTimeout(() => {
-
-        lockScreen.style.opacity = "0";
-
-        setTimeout(() => {
-
-          lockScreen.style.display =
-          "none";
-
-        },500);
-
-      },800);
-
-      return;
-
-    }
-
-    // LOGIN
-
-    if(enteredPassword === savedPassword){
-
-      lockMessage.innerText =
-      "Unlocked 🌙";
-
-      lockScreen.style.opacity = "0";
-
-      setTimeout(() => {
-
-        lockScreen.style.display =
-        "none";
-
-      },500);
-
-    }
-
-    else{
-
-      lockMessage.innerText =
-      "Wrong password 🌙";
-
-      passwordInput.style.border =
-      "1px solid crimson";
-
-      setTimeout(() => {
-
-        passwordInput.style.border =
-        "1px solid rgba(255,255,255,0.1)";
-
-      },2000);
-
-    }
-
-  }
-
-  // BUTTON CLICK
-
-  unlockBtn.addEventListener(
-    "click",
-    unlockJournal
-  );
-
-  // ENTER KEY
-
-  passwordInput.addEventListener(
-    "keydown",
-    (e) => {
-
-      if(e.key === "Enter"){
-
-        unlockJournal();
-
-      }
-
-    }
-  );
-
-  // RESET PASSWORD
-
-  if(resetBtn){
-
-    resetBtn.addEventListener(
-      "click",
-      () => {
-
-        localStorage.removeItem(
-          "midnightPassword"
-        );
-
-        location.reload();
-
-      }
-    );
-
+    isPlaying = false;
   }
 
 });
