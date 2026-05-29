@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Midnight Thoughts</title>
+
+  <!-- Quote Section -->
+
+<div class="quote-box glass">
+
+  <p id="quoteText">
+    “Some thoughts only visit after midnight.”
+  </p>
+
+</div>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#09090f">
+
+</head>
+
+<body>
+
+  <!-- Background Glow Circles -->
+  <div class="bg-circle circle-1"></div>
+  <div class="bg-circle circle-2"></div>
+  <div class="bg-circle circle-3"></div>
+
+  <!-- LOCK SCREEN -->
+
+<div id="lockScreen">
+
+  <div class="lock-box glass">
+
+    <h2>Midnight Thoughts 🌙</h2>
+
+    <p>
+      Enter your secret password
+    </p>
+
+    <input
+      type="password"
+      id="passwordInput"
+      placeholder="Enter password"
+    >
+
+    <button id="unlockBtn">
+      Unlock Journal
+    </button>
+
+    <p id="lockMessage"></p>
+
+  </div>
+
+</div>
+
+  <main class="container">
+
+    <!-- Title -->
+    <h1 class="title">Midnight Thoughts 🌙</h1>
+
+    <!-- Input Section -->
+    <section class="input-card glass">
+
+      <textarea
+        id="thoughtInput"
+        placeholder="What’s haunting your mind tonight...?"
+      ></textarea>
+
+      <button id="saveBtn">
+        Save Thought
+      </button>
+
+      <p id="feedback"></p>
+
+    </section>
+
+    <!-- Stars Background -->
+
+<div class="stars"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+    <!-- Background Music -->
+
+<audio id="bgMusic" loop>
+  <source src="lofi.mp3" type="audio/mp3">
+</audio>
+
+<!-- Music Card -->
+
+<div id="musicCard">
+
+  <div class="music-left">
+    🎵
+  </div>
+
+  <div class="music-right">
+
+    <p class="music-title">
+      Midnight Lofi
+    </p>
+
+    <button id="musicToggle">
+      Play Music
+    </button>
+
+  </div>
+
+</div>
+
+<!-- Mood Selector -->
+
+<div class="mood-selector">
+
+  <button class="mood-btn active" data-mood="normal">
+    🌙
+  </button>
+
+  <button class="mood-btn" data-mood="happy">
+    😊
+  </button>
+
+  <button class="mood-btn" data-mood="sad">
+    😔
+  </button>
+
+  <button class="mood-btn" data-mood="lonely">
+    🌧
+  </button>
+
+</div>
+
+    <!-- Thoughts Section -->
+    <section class="thoughts-section">
+
+      <!-- Empty State -->
+      <div id="emptyState" class="glass empty-state">
+        <p>No thoughts saved yet...</p>
+      </div>
+
+      <!-- Saved Thoughts -->
+      <div id="thoughtsContainer"></div>
+
+    </section>
+
+  </main>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+
+</body>
+</html>
