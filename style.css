@@ -1,836 +1,552 @@
-/* =========================
-   GLOBAL STYLES
-========================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-body {
-    background: #09090f;
-    color: white;
-    font-family: "Poppins", sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
+html{
+  scroll-behavior:smooth;
 }
 
-/* =========================
-   QUOTE SECTION
-========================= */
+body{
+  background:#09090f;
+  color:white;
+  font-family:"Poppins",sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* CONTAINER */
+
+.container{
+  width:90%;
+  max-width:800px;
+  margin:auto;
+  padding:40px 0 80px;
+  position:relative;
+  z-index:2;
+}
+
+/* GLASS */
+
+.glass{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+  border-radius:22px;
+}
+
+/* TITLE */
+
+.title{
+  text-align:center;
+  font-size:3rem;
+  margin-bottom:30px;
+
+  background:linear-gradient(to right,#a855f7,#60a5fa);
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  animation:
+    glow 3s infinite alternate,
+    floatTitle 5s ease-in-out infinite;
+}
+
+@keyframes glow{
+  from{opacity:0.8;}
+  to{opacity:1;}
+}
+
+@keyframes floatTitle{
+  0%{transform:translateY(0px);}
+  50%{transform:translateY(-6px);}
+  100%{transform:translateY(0px);}
+}
+
+/* QUOTE */
 
 .quote-box{
-  padding: 18px;
-
-  margin-bottom: 25px;
-
-  text-align: center;
-
-  animation: fadeIn 1s ease;
+  padding:18px;
+  margin-bottom:25px;
+  text-align:center;
 }
 
 .quote-box p{
-  font-size: 0.95rem;
-
-  line-height: 1.6;
-
-  opacity: 0.85;
-
-  font-style: italic;
-
-  color: #dbeafe;
+  font-style:italic;
+  opacity:0.8;
+  color:#dbeafe;
 }
 
-/* =========================
-   MOOD SELECTOR
-========================= */
+/* SEARCH */
 
-.mood-selector{
-  display: flex;
-  gap: 10px;
+#searchInput{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  margin-bottom:20px;
 
-  margin-top: 15px;
-  margin-bottom: 5px;
+  background:rgba(255,255,255,0.08);
+  color:white;
 }
 
-.mood-btn{
-  width: 45px;
-  height: 45px;
-
-  border: none;
-  border-radius: 14px;
-
-  cursor: pointer;
-
-  font-size: 1.1rem;
-
-  background: rgba(255,255,255,0.08);
-
-  color: white;
-
-  transition: 0.3s ease;
+#searchInput::placeholder{
+  color:rgba(255,255,255,0.5);
 }
 
-.mood-btn:hover{
-  transform: translateY(-3px);
+/* TAGS */
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:20px;
 }
 
-.mood-btn.active{
-  background: linear-gradient(
+.tag{
+  border:none;
+  padding:10px 16px;
+  border-radius:14px;
+  cursor:pointer;
+
+  background:rgba(255,255,255,0.08);
+  color:white;
+
+  transition:0.3s ease;
+}
+
+.tag:hover{
+  transform:translateY(-3px);
+}
+
+/* EXTRAS */
+
+.extras{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.extras button,
+#recordBtn{
+  border:none;
+  padding:12px 16px;
+  border-radius:14px;
+  cursor:pointer;
+
+  background:rgba(255,255,255,0.08);
+  color:white;
+
+  transition:0.3s ease;
+}
+
+.extras button:hover,
+#recordBtn:hover{
+  transform:translateY(-3px);
+}
+
+/* AUDIO */
+
+.audio-box{
+  padding:20px;
+  margin-bottom:25px;
+}
+
+/* INPUT CARD */
+
+.input-card{
+  padding:25px;
+  margin-bottom:25px;
+}
+
+textarea{
+  width:100%;
+  min-height:180px;
+
+  background:rgba(255,255,255,0.05);
+
+  border:1px solid rgba(255,255,255,0.1);
+
+  border-radius:18px;
+
+  padding:18px;
+
+  color:white;
+
+  resize:none;
+
+  outline:none;
+}
+
+textarea::placeholder{
+  color:rgba(255,255,255,0.5);
+}
+
+textarea:focus{
+  border-color:#7c4dff;
+}
+
+/* SAVE BUTTON */
+
+#saveBtn{
+  width:100%;
+  margin-top:18px;
+
+  padding:14px;
+
+  border:none;
+  border-radius:14px;
+
+  cursor:pointer;
+
+  color:white;
+
+  font-weight:600;
+
+  background:linear-gradient(
     135deg,
     #7c4dff,
     #2196f3
   );
 
-  box-shadow:
-    0 0 15px rgba(124,77,255,0.4);
+  transition:0.3s ease;
 }
 
-/* =========================
-   BACKGROUND GLOW
-========================= */
-
-.bg-circle {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(100px);
-    z-index: -1;
-    opacity: 0.5;
+#saveBtn:hover{
+  transform:translateY(-2px);
 }
 
-.circle-1 {
-    width: 300px;
-    height: 300px;
-    background: #7c4dff;
-    top: -80px;
-    left: -80px;
+/* FEEDBACK */
+
+#feedback{
+  text-align:center;
+  margin-top:10px;
+  color:#7ee787;
 }
 
-.circle-2 {
-    width: 250px;
-    height: 250px;
-    background: #2196f3;
-    bottom: 0;
-    right: 0;
+/* MOODS */
+
+.mood-selector{
+  display:flex;
+  gap:10px;
+  margin-bottom:25px;
 }
 
-.circle-3 {
-    width: 180px;
-    height: 180px;
-    background: #9c27b0;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.mood-btn{
+  width:45px;
+  height:45px;
+
+  border:none;
+  border-radius:14px;
+
+  cursor:pointer;
+
+  background:rgba(255,255,255,0.08);
+
+  color:white;
+
+  transition:0.3s ease;
 }
 
-/* =========================
-   CONTAINER
-========================= */
-
-.container {
-    width: 90%;
-    max-width: 800px;
-    margin: auto;
-    padding: 40px 0 80px;
+.mood-btn.active{
+  background:linear-gradient(
+    135deg,
+    #7c4dff,
+    #2196f3
+  );
 }
 
-/* =========================
-   TITLE
-========================= */
+/* THOUGHTS */
 
-.title {
-    text-align: center;
-    font-size: 3rem;
-    margin-bottom: 35px;
-
-    background: linear-gradient(to right, #a855f7, #60a5fa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    text-shadow:
-        0 0 10px rgba(168, 85, 247, 0.5),
-        0 0 20px rgba(96, 165, 250, 0.4);
-
-    animation: glow 3s infinite alternate;
+#thoughtsContainer{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
 
-@keyframes glow {
-    from {
-        opacity: 0.8;
-    }
-
-    to {
-        opacity: 1;
-    }
+.thought-card{
+  padding:22px;
+  position:relative;
+  overflow:hidden;
 }
 
-/* =========================
-   GLASS EFFECT
-========================= */
-
-.glass {
-    background: rgba(255, 255, 255, 0.07);
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    backdrop-filter: blur(15px);
-
-    border-radius: 22px;
+.thought-text{
+  line-height:1.7;
+  margin-bottom:18px;
+  white-space:pre-wrap;
 }
 
-/* SEARCH */
-#searchInput{
-width:90%;
-margin:10px auto;
-display:block;
-padding:10px;
-border-radius:10px;
+.card-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-/* TAGS */
-.tags{
-display:flex;
-gap:10px;
-justify-content:center;
-flex-wrap:wrap;
+.date{
+  opacity:0.7;
+  font-size:0.85rem;
 }
 
-.tag{
-padding:6px 12px;
-border-radius:20px;
-border:none;
-cursor:pointer;
+.card-buttons{
+  display:flex;
+  gap:10px;
 }
 
-/* PIN */
-.pinned{
-border:2px solid gold;
+.card-buttons button{
+  border:none;
+
+  width:40px;
+  height:40px;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  background:rgba(255,255,255,0.08);
+
+  color:white;
+
+  transition:0.3s ease;
 }
 
-/* TAG COLORS */
-.love{border-left:4px solid pink;}
-.sad{border-left:4px solid blue;}
-.study{border-left:4px solid green;}
-.random{border-left:4px solid purple;}
+.card-buttons button:hover{
+  transform:translateY(-3px);
 
-/* MIRROR */
-.mirror{
-font-style:italic;
-opacity:0.8;
-color:#aaa;
+  background:linear-gradient(
+    135deg,
+    #7c4dff,
+    #2196f3
+  );
 }
 
-/* =========================
-   INPUT CARD
-========================= */
+/* EMPTY */
 
-.input-card {
-    padding: 25px;
-    margin-bottom: 35px;
-
-    box-shadow:
-        0 0 20px rgba(124, 77, 255, 0.15);
-
-    transition: 0.3s ease;
+.empty-state{
+  text-align:center;
+  padding:30px;
+  opacity:0.7;
 }
 
-.input-card:hover {
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 0 25px rgba(96, 165, 250, 0.2);
-}
-
-/* =========================
-   TEXTAREA
-========================= */
-
-textarea {
-    width: 100%;
-    min-height: 180px;
-
-    background: rgba(255, 255, 255, 0.05);
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    border-radius: 18px;
-
-    padding: 18px;
-
-    color: white;
-
-    font-size: 1rem;
-
-    resize: none;
-
-    outline: none;
-
-    transition: 0.3s ease;
-}
-
-textarea:focus {
-    border-color: #7c4dff;
-
-    box-shadow:
-        0 0 15px rgba(124, 77, 255, 0.4);
-}
-
-textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-/* =========================
-   BUTTON
-========================= */
-
-#saveBtn {
-    margin-top: 18px;
-
-    width: 100%;
-
-    padding: 14px;
-
-    border: none;
-
-    border-radius: 14px;
-
-    font-size: 1rem;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    color: white;
-
-    background: linear-gradient(135deg,
-            #7c4dff,
-            #2196f3);
-
-    transition: all 0.3s ease;
-
-    box-shadow:
-        0 0 15px rgba(124, 77, 255, 0.4);
-}
-
-#saveBtn:hover {
-    transform: translateY(-2px) scale(1.01);
-
-    box-shadow:
-        0 0 25px rgba(96, 165, 250, 0.6);
-}
-
-#saveBtn:active {
-    transform: scale(0.98);
-}
-
-/* =========================
-   FEEDBACK
-========================= */
-
-#feedback {
-    margin-top: 10px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #7ee787;
-}
-
-/* =========================
-   THOUGHTS CONTAINER
-========================= */
-
-#thoughtsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-/* =========================
-   THOUGHT CARD
-========================= */
-
-.thought-card {
-    padding: 22px;
-
-    position: relative;
-
-    overflow: hidden;
-
-    animation: fadeIn 0.5s ease;
-
-    transition: 0.3s ease;
-}
-
-.thought-card::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background: linear-gradient(135deg,
-            rgba(124, 77, 255, 0.1),
-            rgba(33, 150, 243, 0.1));
-
-    opacity: 0;
-
-    transition: 0.3s ease;
-}
-
-.thought-card:hover::before {
-    opacity: 1;
-}
-
-.thought-card:hover {
-    transform: translateY(-4px);
-}
-
-/* =========================
-   CARD ANIMATION
-========================= */
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* =========================
-   THOUGHT TEXT
-========================= */
-
-.thought-text {
-    font-size: 1rem;
-    line-height: 1.7;
-    margin-bottom: 18px;
-    white-space: pre-wrap;
-}
-
-/* =========================
-   CARD FOOTER
-========================= */
-
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-/* =========================
-   ANIMATED STARS
-========================= */
+/* STARS */
 
 .stars,
 .stars2,
 .stars3{
-  position: fixed;
-  top: 0;
-  left: 0;
+  position:fixed;
+  top:0;
+  left:0;
 
-  width: 100%;
-  height: 100%;
+  width:100%;
+  height:100%;
 
-  z-index: -2;
+  z-index:-2;
 
-  background-repeat: repeat;
-
-  animation: moveStars 120s linear infinite;
+  animation:moveStars 120s linear infinite;
 }
-
-/* Small Stars */
 
 .stars{
   background-image:
-    radial-gradient(white 1px, transparent 1px);
+    radial-gradient(white 1px,transparent 1px);
 
-  background-size: 50px 50px;
-
-  opacity: 0.25;
+  background-size:50px 50px;
+  opacity:0.25;
 }
-
-/* Medium Stars */
 
 .stars2{
   background-image:
-    radial-gradient(#c4b5fd 1.5px, transparent 1.5px);
+    radial-gradient(#c4b5fd 1.5px,transparent 1.5px);
 
-  background-size: 100px 100px;
-
-  opacity: 0.18;
-
-  animation-duration: 180s;
+  background-size:100px 100px;
+  opacity:0.18;
 }
-
-/* Big Stars */
 
 .stars3{
   background-image:
-    radial-gradient(#93c5fd 2px, transparent 2px);
+    radial-gradient(#93c5fd 2px,transparent 2px);
 
-  background-size: 160px 160px;
-
-  opacity: 0.12;
-
-  animation-duration: 240s;
+  background-size:160px 160px;
+  opacity:0.12;
 }
-
-/* Animation */
 
 @keyframes moveStars{
-
-  from{
-    transform: translateY(0);
-  }
-
-  to{
-    transform: translateY(-1000px);
-  }
-
+  from{transform:translateY(0);}
+  to{transform:translateY(-1000px);}
 }
 
-/* =========================
-   MUSIC CARD
-========================= */
+/* BG GLOW */
+
+.bg-circle{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(100px);
+  z-index:-1;
+  opacity:0.5;
+}
+
+.circle-1{
+  width:300px;
+  height:300px;
+  background:#7c4dff;
+  top:-80px;
+  left:-80px;
+}
+
+.circle-2{
+  width:250px;
+  height:250px;
+  background:#2196f3;
+  bottom:0;
+  right:0;
+}
+
+.circle-3{
+  width:180px;
+  height:180px;
+  background:#9c27b0;
+  top:50%;
+  left:50%;
+}
+
+/* MUSIC */
 
 #musicCard{
-  position: fixed;
+  position:fixed;
+  top:20px;
+  right:20px;
 
-  top: 20px;
-  right: 20px;
+  width:220px;
 
-  width: 230px;
+  padding:14px;
 
-  padding: 14px;
+  display:flex;
+  gap:14px;
 
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  border-radius:22px;
 
-  background: rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.08);
 
-  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter:blur(18px);
 
-  backdrop-filter: blur(18px);
-
-  border-radius: 22px;
-
-  box-shadow:
-    0 0 25px rgba(255,255,255,0.08);
-
-  z-index: 999;
-
-  transition: 0.3s ease;
+  z-index:999;
 }
-
-#musicCard:hover{
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 0 30px rgba(255,255,255,0.12);
-}
-
-/* Left Music Icon */
 
 .music-left{
-  width: 55px;
-  height: 55px;
+  width:55px;
+  height:55px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-  border-radius: 18px;
+  border-radius:18px;
 
-  font-size: 1.5rem;
+  background:white;
 
-  background: whitesmoke;
-
-  animation: floatMusic 3s ease-in-out infinite;
+  font-size:1.4rem;
 }
-
-/* Floating Animation */
-
-@keyframes floatMusic{
-
-  0%{
-    transform: translateY(0px);
-  }
-
-  50%{
-    transform: translateY(-4px);
-  }
-
-  100%{
-    transform: translateY(0px);
-  }
-
-}
-
-/* Right Side */
-
-.music-right{
-  flex: 1;
-}
-
-/* Music Title */
 
 .music-title{
-  font-size: 0.9rem;
-  font-weight: 600;
-
-  color: white;
-
-  margin-bottom: 8px;
+  margin-bottom:8px;
 }
-
-/* Music Button */
 
 #musicToggle{
-  border: none;
-
-  padding: 8px 14px;
-
-  border-radius: 12px;
-
-  cursor: pointer;
-
-  font-size: 0.85rem;
-  font-weight: 500;
-
-  background: white;
-
-  color: #111;
-
-  transition: 0.3s ease;
+  border:none;
+  padding:8px 14px;
+  border-radius:12px;
+  cursor:pointer;
 }
 
-#musicToggle:hover{
-  transform: scale(1.05);
+/* LOCK */
+
+#lockScreen{
+  position:fixed;
+  inset:0;
+
+  background:#09090f;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  z-index:9999;
 }
 
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
-
-@media (max-width: 600px){
-
-  #musicCard{
-
-    width: 190px;
-
-    top: 15px;
-    right: 15px;
-
-    padding: 12px;
-  }
-
-  .music-left{
-    width: 48px;
-    height: 48px;
-
-    font-size: 1.2rem;
-  }
-
-  .music-title{
-    font-size: 0.8rem;
-  }
-
-  #musicToggle{
-    padding: 7px 12px;
-    font-size: 0.75rem;
-  }
-
+.lock-box{
+  width:90%;
+  max-width:400px;
+  padding:30px;
+  text-align:center;
 }
 
-/* DATE */
+.lock-box input{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
 
-.date {
-    font-size: 0.85rem;
-    opacity: 0.7;
+  border:none;
+  border-radius:12px;
+
+  background:rgba(255,255,255,0.08);
+
+  color:white;
 }
 
-/* DELETE BUTTON */
+.lock-box button{
+  width:100%;
+  margin-top:15px;
 
-.delete-btn {
-    border: none;
+  padding:14px;
 
-    padding: 8px 14px;
+  border:none;
+  border-radius:12px;
 
-    border-radius: 10px;
+  color:white;
 
-    cursor: pointer;
+  cursor:pointer;
 
-    background: rgba(255, 0, 80, 0.15);
-
-    color: #ff5d8f;
-
-    transition: 0.3s ease;
+  background:linear-gradient(
+    135deg,
+    #7c4dff,
+    #2196f3
+  );
 }
 
-.delete-btn:hover {
-    background: rgba(255, 0, 80, 0.25);
-
-    transform: scale(1.05);
-}
-
-/* Fix delete button click issue */
-
-.thought-card::before {
-    pointer-events: none;
-}
-
-.card-footer,
-.thought-text {
-    position: relative;
-    z-index: 2;
-}
-
-/* =========================
-   EMPTY STATE
-========================= */
-
-.empty-state {
-    text-align: center;
-    padding: 30px;
-    opacity: 0.7;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 600px) {
-
-    .title {
-        font-size: 2.2rem;
-    }
-
-    .container {
-        width: 92%;
-    }
-
-    textarea {
-        min-height: 160px;
-    }
-
-    .card-footer {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-}
-
-
-/* =========================
-   MOBILE RESPONSIVE DESIGN
-========================= */
-
-@media (max-width: 768px){
-
-  .container{
-    width: 92%;
-    padding: 25px 0 60px;
-  }
-
-  .title{
-    font-size: 2.2rem;
-    line-height: 1.3;
-    margin-bottom: 25px;
-  }
-
-  .input-card{
-    padding: 18px;
-    border-radius: 20px;
-  }
-
-  textarea{
-    min-height: 170px;
-    font-size: 0.95rem;
-    padding: 16px;
-    border-radius: 16px;
-  }
-
-  #saveBtn{
-    padding: 13px;
-    font-size: 0.95rem;
-    border-radius: 12px;
-  }
-
-  .thought-card{
-    padding: 18px;
-    border-radius: 18px;
-  }
-
-  .thought-text{
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-
-  .card-footer{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .delete-btn{
-    width: 100%;
-    padding: 10px;
-  }
-
-  .bg-circle{
-    filter: blur(90px);
-    opacity: 0.4;
-  }
-
-}
-
-/* =========================
-   EXTRA SMALL DEVICES
-========================= */
-
-@media (max-width: 480px){
-
-  .title{
-    font-size: 1.8rem;
-  }
-
-  textarea{
-    min-height: 150px;
-  }
-
-  .thought-text{
-    font-size: 0.9rem;
-  }
-
-  .date{
-    font-size: 0.75rem;
-  }
-
-}
-
-/* =========================
-   MOOD CARD GLOWS
-========================= */
+/* MOODS */
 
 .happy{
-  box-shadow:
-    0 0 20px rgba(255,215,0,0.2);
+  box-shadow:0 0 20px rgba(255,215,0,0.2);
 }
 
 .sad{
-  box-shadow:
-    0 0 20px rgba(59,130,246,0.2);
+  box-shadow:0 0 20px rgba(59,130,246,0.2);
 }
 
 .lonely{
-  box-shadow:
-    0 0 20px rgba(168,85,247,0.2);
+  box-shadow:0 0 20px rgba(168,85,247,0.2);
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .title{
+    font-size:2rem;
+  }
+
+  .container{
+    width:92%;
+  }
+
+  .card-footer{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  #musicCard{
+    width:190px;
+  }
+
 }
